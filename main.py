@@ -21,6 +21,11 @@ class CommentRequest(BaseModel):
     text: str
 
 
+@app.get("/ping")
+def ping():
+    return {"message": "healthy"}  # For uptime monitoring
+
+
 @app.post("/moderate")
 def moderate_comment(req: CommentRequest):
     result = client.text_classification(
@@ -30,11 +35,9 @@ def moderate_comment(req: CommentRequest):
 
     for item in result:
         if item.label in BAD_LABELS and item.score >= THRESHOLD:
-            # ❌ Toxic → reject
             raise HTTPException(
                 status_code=400,
                 detail="Your comment contains inappropriate content"
             )
 
-    # ✅ Safe → allow
     return {"message": "OK"}
