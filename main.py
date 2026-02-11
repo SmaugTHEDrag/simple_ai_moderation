@@ -21,9 +21,10 @@ class CommentRequest(BaseModel):
     text: str
 
 
-@app.get("/ping")
+@app.api_route("/ping", methods=["GET", "HEAD"])
 def ping():
-    return {"message": "healthy"}  # For uptime monitoring
+    return {"message": "healthy"}
+
 
 
 @app.post("/moderate")
